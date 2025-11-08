@@ -4,7 +4,8 @@ import { z } from "zod";
 
 type ApiMethod = "GET" | "POST" | "PATCH" | "DELETE";
 
-const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "";
+const publicApiBase = process.env.NEXT_PUBLIC_API_URL ?? "";
+const internalApiBase = process.env.API_INTERNAL_URL ?? publicApiBase;
 const AUTH_COOKIE = "fontbox.session";
 
 interface FetchOptions<TSchema extends z.ZodTypeAny | undefined> {
@@ -33,7 +34,8 @@ export const apiFetch = async <TSchema extends z.ZodTypeAny | undefined = undefi
   const requestHeaders = new Headers(headers);
   requestHeaders.set("Content-Type", "application/json");
 
-  const resolvedPath = path.startsWith("http") ? path : `${apiBase}${path}`;
+  const baseUrl = typeof window === "undefined" ? internalApiBase : publicApiBase;
+  const resolvedPath = path.startsWith("http") ? path : `${baseUrl}${path}`;
 
   const response = await fetch(resolvedPath, {
     method,
