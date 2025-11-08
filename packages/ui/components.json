@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "../../packages/config/src/tailwind/preset.ts",
+    "css": "src/styles/tailwind.css",
+    "baseColor": "slate",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@fontbox/ui/src/components",
+    "utils": "@fontbox/ui/src/utils",
+    "lib": "@fontbox/ui/src/lib"
+  }
+}
