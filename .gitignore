@@ -5,5 +5,8 @@ node_modules/
 .env.production
 .env.development
 storage/
+!apps/api/src/storage/
+!apps/api/src/storage/*.test.ts
+!apps/api/src/storage/*.test.ts
 .next/
 dist/

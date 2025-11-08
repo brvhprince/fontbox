@@ -11,5 +11,17 @@
     "e2e": "turbo run e2e",
     "prisma:migrate": "turbo run prisma:migrate",
     "prisma:seed": "turbo run prisma:seed"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "^10.7.1",
+    "@testcontainers/redis": "^10.7.1",
+    "@types/supertest": "^2.0.16",
+    "execa": "^8.0.1",
+    "supertest": "^6.3.4",
+    "testcontainers": "^10.7.1",
+    "ts-node": "^10.9.2",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^1.6.0",
+    "@vitest/coverage-v8": "^1.6.0"
   }
 }

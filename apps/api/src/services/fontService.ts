@@ -1,7 +1,3 @@
-import { promises as fs } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
-import { createCanvas, registerFont } from 'canvas';
 import type { Express } from 'express';
 import { prisma } from '../config/prisma.js';
 import { getStorageDriver } from '../storage/index.js';
@@ -10,6 +6,7 @@ import { sha256 } from '../utils/hash.js';
 import { cacheKeys } from '../utils/cacheKeys.js';
 import { redis } from '../config/redis.js';
 import { slugify } from '../utils/slugify.js';
+import { generatePreview } from './previewService.js';
 
 interface DetectedFont {
   extension: string;
@@ -41,7 +38,7 @@ export interface FontListFilters {
   projectId?: string;
 }
 
-function detectFont(buffer: Buffer): DetectedFont | null {
+export function detectFont(buffer: Buffer): DetectedFont | null {
   for (const signature of FONT_SIGNATURES) {
     if (typeof signature.signature === 'string') {
       const prefix = buffer.subarray(0, signature.signature.length).toString('ascii');
@@ -74,37 +71,6 @@ async function ensureTags(tagNames: string[]) {
   return tagIds;
 }
 
-async function generatePreview(fontId: string, fontName: string, buffer: Buffer) {
-  const tempDir = await fs.mkdtemp(join(tmpdir(), 'fontbox-'));
-  const tempPath = join(tempDir, `${fontId}.font`);
-  await fs.writeFile(tempPath, buffer);
-  const family = `Fontbox-${fontId}`;
-  registerFont(tempPath, { family });
-
-  try {
-    const canvas = createCanvas(800, 320);
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#f3f4f6';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = '#111827';
-    ctx.font = `48px "${family}"`;
-    ctx.fillText('Fontbox Preview', 40, 120);
-
-    ctx.font = `32px "${family}"`;
-    ctx.fillText(fontName, 40, 200);
-
-    ctx.font = `20px "${family}"`;
-    ctx.fillText('The quick brown fox jumps over the lazy dog 0123456789', 40, 260);
-
-    const png = canvas.toBuffer('image/png');
-    return { buffer: png, width: canvas.width, height: canvas.height };
-  } finally {
-    await fs.rm(tempPath, { force: true });
-    await fs.rm(tempDir, { recursive: true, force: true });
-  }
-}
-
 async function invalidateFontCaches(fontId: string, listKey?: string) {
   const keys = [cacheKeys.font(fontId)];
   if (listKey) {
@@ -121,7 +87,7 @@ async function invalidateFontCaches(fontId: string, listKey?: string) {
   }
 }
 
-function computeListCacheKey(filters: FontListFilters) {
+export function computeListCacheKey(filters: FontListFilters) {
   const payload = JSON.stringify(filters);
   return cacheKeys.fontsList(sha256(Buffer.from(payload)));
 }
