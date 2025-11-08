@@ -1,12 +1,22 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": [
-    "../../tsconfig.base.json",
-    "next/core-web-vitals"
-  ],
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": "./src",
     "types": ["node"],
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
       "@/*": ["./*"],
       "@ui/*": ["../../packages/ui/src/*"],
@@ -21,7 +31,8 @@
     "src/**/*.cts",
     "src/**/*.js",
     "src/**/*.cjs",
-    "src/**/*.mjs"
+    "src/**/*.mjs",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

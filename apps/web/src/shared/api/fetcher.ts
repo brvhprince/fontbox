@@ -1,12 +1,9 @@
-import { cookies } from "next/headers";
-import { cache } from "react";
 import { z } from "zod";
 
 type ApiMethod = "GET" | "POST" | "PATCH" | "DELETE";
 
-const publicApiBase = process.env.NEXT_PUBLIC_API_URL ?? "";
+const publicApiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
 const internalApiBase = process.env.API_INTERNAL_URL ?? publicApiBase;
-const AUTH_COOKIE = "fontbox.session";
 
 interface FetchOptions<TSchema extends z.ZodTypeAny | undefined> {
   method?: ApiMethod;
@@ -71,14 +68,6 @@ const safeJson = async (response: Response) => {
 };
 
 export const swrFetcher = (url: string) => apiFetch(url);
-
-export const getSessionToken = cache(() => {
-  try {
-    return cookies().get(AUTH_COOKIE)?.value ?? null;
-  } catch (error) {
-    return null;
-  }
-});
 
 export const optimisticUpdate = async <T>(
   updater: () => Promise<T>,

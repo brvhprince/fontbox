@@ -1,6 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
+    "dev": {
+      "outputs": [],
+      "cache": false,
+      "persistent": true
+    },
     "lint": {
       "outputs": []
     },

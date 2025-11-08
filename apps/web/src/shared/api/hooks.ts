@@ -49,6 +49,11 @@ export const useCreateFont = () =>
     api.fonts.create(arg)
   );
 
+export const useUploadFont = () =>
+  useSWRMutation(`/fonts/upload`, async (_key, { arg }: { arg: { file: File; metadata: Parameters<typeof api.fonts.upload>[1] } }) =>
+    api.fonts.upload(arg.file, arg.metadata)
+  );
+
 export const useUpdateFont = (id: string) =>
   useSWRMutation(`/fonts/${id}`, async (_key, { arg }: { arg: Parameters<typeof api.fonts.update>[1] }) =>
     api.fonts.update(id, arg)

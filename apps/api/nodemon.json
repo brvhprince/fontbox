@@ -1,6 +1,6 @@
 {
   "watch": ["src", "prisma"],
-  "ext": "ts,json", 
+  "ext": "ts,json",
   "ignore": ["dist"],
-  "exec": "node --loader ts-node/esm src/server.ts"
+  "exec": "tsx src/server.ts"
 }

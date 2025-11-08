@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { Button, Separator } from "@fontbox/ui";
 
 import { logoutAction } from "../../shared/auth/actions";
-import { getSessionToken } from "../../shared/api/fetcher";
+import { getSessionToken } from "../../shared/api/server-utils";
 
 const navigation = [
   { href: "/fonts", label: "Fonts" },

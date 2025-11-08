@@ -42,22 +42,29 @@ export const projectSchema = z.object({
 
 export const paginatedResponse = <T extends z.ZodTypeAny>(item: T) =>
   z.object({
-    data: z.array(item),
+    items: z.array(item),
     page: z.number(),
     pageSize: z.number(),
-    total: z.number(),
-    hasMore: z.boolean()
-  });
+    total: z.number()
+  }).transform((data) => ({
+    data: data.items,
+    page: data.page,
+    pageSize: data.pageSize,
+    total: data.total,
+    hasMore: data.page * data.pageSize < data.total
+  }));
 
 export const authUserSchema = z.object({
   id: z.string(),
   email: z.string().email(),
-  name: z.string().nullable()
+  displayName: z.string().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string()
 });
 
 export const authResponseSchema = z.object({
   user: authUserSchema,
-  token: z.string().optional()
+  accessToken: z.string().optional()
 });
 
 export const uploadFontSchema = z.object({

@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 
 import { Button, Input, Label } from "@fontbox/ui";
 
-import { loginAction } from "../../../shared/auth/actions";
-import { getSessionToken } from "../../../shared/api/fetcher";
+import { loginAction } from "@/shared/auth/actions";
+import { getSessionToken } from "@/shared/api/server-utils";
 
 export default async function LoginPage() {
   const session = getSessionToken();

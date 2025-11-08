@@ -29,3 +29,28 @@ export async function authenticate(req: Request, _res: Response, next: NextFunct
     next(new HttpError(401, 'Authentication required'));
   }
 }
+
+export async function optionalAuthenticate(req: Request, _res: Response, next: NextFunction) {
+  try {
+    const token =
+      req.cookies?.[env.SESSION_COOKIE_NAME] ||
+      req.headers.authorization?.replace('Bearer ', '') ||
+      undefined;
+
+    if (!token) {
+      return next();
+    }
+
+    const payload = verifyAccessToken(token);
+    req.accessTokenId = payload.jti;
+    const user = await prisma.user.findUnique({ where: { id: payload.sub } });
+
+    if (user) {
+      req.user = user;
+    }
+
+    next();
+  } catch (error) {
+    next();
+  }
+}

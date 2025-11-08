@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { Button, Input, Label } from "@fontbox/ui";
 
 import { registerAction } from "../../../shared/auth/actions";
-import { getSessionToken } from "../../../shared/api/fetcher";
+import { getSessionToken } from "../../../shared/api/server-utils";
 
 export default async function RegisterPage() {
   const session = getSessionToken();

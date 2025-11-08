@@ -48,6 +48,27 @@ export const api = {
       return apiFetch(`/fonts${buildQuery(params)}`, { schema });
     },
     detail: async (id: string) => apiFetch(`/fonts/${id}`, { schema: fontSchema }),
+    upload: async (file: File, metadata: Partial<z.infer<typeof uploadFontSchema>>) => {
+      const formData = new FormData();
+      formData.append("font", file);
+      if (metadata.name) formData.append("name", metadata.name);
+      if (metadata.description) formData.append("description", metadata.description);
+      if (metadata.categoryId) formData.append("categoryId", metadata.categoryId);
+      if (metadata.tags) formData.append("tags", JSON.stringify(metadata.tags));
+
+      const publicApiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
+      const response = await fetch(`${publicApiBase}/fonts/upload`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      return response.json();
+    },
     create: async (payload: z.infer<typeof uploadFontSchema>) =>
       apiFetch(`/fonts`, { method: "POST", body: payload, schema: fontSchema }),
     update: async (id: string, payload: Partial<z.infer<typeof uploadFontSchema>>) =>
@@ -89,7 +110,7 @@ export const api = {
     me: async () => apiFetch(`/auth/me`, { schema: authUserSchema }),
     login: async (payload: { email: string; password: string }) =>
       apiFetch(`/auth/login`, { method: "POST", body: payload, schema: authResponseSchema }),
-    register: async (payload: { name: string; email: string; password: string }) =>
+    register: async (payload: { displayName: string; email: string; password: string }) =>
       apiFetch(`/auth/register`, {
         method: "POST",
         body: payload,

@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { api } from "../../../shared/api/client";
 import type { PaginationParams } from "../../../shared/api/client";
-import { FontLibrary } from "../../../components/font-library";
+import { FontLibrary } from "@/components/font-library";
 
 const initialFilters: PaginationParams = {
   page: 1,
@@ -41,7 +41,6 @@ export default function FontsPage() {
         </p>
       </header>
       <Suspense fallback={<div className="rounded-lg border border-dashed p-8 text-center text-neutral-500">Loading library…</div>}>
-        {/* @ts-expect-error Async Server Component */}
         <FontLibrarySection />
       </Suspense>
     </div>

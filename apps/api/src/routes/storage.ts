@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { prisma } from '../config/prisma.js';
-import { getStorageDriver } from '../storage/index.js';
+import { getStorageDriver } from '../storage';
 import { HttpError } from '../middleware/errorHandler.js';
 
 const router = Router();

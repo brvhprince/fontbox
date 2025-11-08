@@ -5,17 +5,17 @@ import { redirect } from "next/navigation";
 
 import { api } from "../api/client";
 
-const AUTH_COOKIE = "fontbox.session";
+const AUTH_COOKIE = "fontbox_session";
 
-export const loginAction = async (_prevState: unknown, formData: FormData) => {
+export const loginAction = async (formData: FormData) => {
   const payload = {
     email: String(formData.get("email") ?? ""),
     password: String(formData.get("password") ?? "")
   };
 
   const response = await api.auth.login(payload);
-  if (response.token) {
-    cookies().set(AUTH_COOKIE, response.token, {
+  if (response.accessToken) {
+    cookies().set(AUTH_COOKIE, response.accessToken, {
       httpOnly: true,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
@@ -25,16 +25,16 @@ export const loginAction = async (_prevState: unknown, formData: FormData) => {
   redirect("/fonts");
 };
 
-export const registerAction = async (_prevState: unknown, formData: FormData) => {
+export const registerAction = async (formData: FormData) => {
   const payload = {
-    name: String(formData.get("name") ?? ""),
+    displayName: String(formData.get("name") ?? ""),
     email: String(formData.get("email") ?? ""),
     password: String(formData.get("password") ?? "")
   };
 
   const response = await api.auth.register(payload);
-  if (response.token) {
-    cookies().set(AUTH_COOKIE, response.token, {
+  if (response.accessToken) {
+    cookies().set(AUTH_COOKIE, response.accessToken, {
       httpOnly: true,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",

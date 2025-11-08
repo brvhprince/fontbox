@@ -19,7 +19,7 @@ import {
   Textarea
 } from "@fontbox/ui";
 
-import { useCreateCategory, useCreateFont, useCreateTag } from "../../shared/api/hooks";
+import { useCreateCategory, useUploadFont, useCreateTag } from "../../shared/api/hooks";
 import type { Category, Font, Tag } from "../../shared/api/schema";
 import { useToast } from "../../shared/ui/toast";
 
@@ -53,7 +53,7 @@ export function UploadDialog({ existingFonts, tags, categories, onTagCreated, on
   const [progress, setProgress] = useState(0);
 
   const notify = useToast();
-  const { trigger: createFont, isMutating } = useCreateFont();
+  const { trigger: uploadFont, isMutating } = useUploadFont();
   const { trigger: createTag } = useCreateTag();
   const { trigger: createCategory } = useCreateCategory();
 
@@ -101,8 +101,12 @@ export function UploadDialog({ existingFonts, tags, categories, onTagCreated, on
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!formState.name || !formState.family) {
-      notify({ title: "Missing details", description: "Provide a name and family", variant: "destructive" });
+    if (selectedFiles.length === 0) {
+      notify({ title: "No file selected", description: "Please select a font file to upload", variant: "destructive" });
+      return;
+    }
+    if (!formState.name) {
+      notify({ title: "Missing details", description: "Provide a name for the font", variant: "destructive" });
       return;
     }
     if (duplicates.length > 0) {
@@ -115,17 +119,13 @@ export function UploadDialog({ existingFonts, tags, categories, onTagCreated, on
     }
     try {
       setProgress(10);
-      await createFont({
-        name: formState.name,
-        family: formState.family,
-        tags: selectedTags,
-        categories: selectedCategories,
+      await uploadFont({
+        file: selectedFiles[0],
         metadata: {
-          style: formState.style,
-          weight: Number(formState.weight),
-          foundry: formState.foundry || undefined,
-          license: formState.license || undefined,
-          description: formState.description || undefined
+          name: formState.name,
+          description: formState.description || undefined,
+          categoryId: selectedCategories[0] || undefined,
+          tags: selectedTags
         }
       });
       setProgress(100);

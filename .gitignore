@@ -10,3 +10,5 @@ storage/
 !apps/api/src/storage/*.test.ts
 .next/
 dist/
+.idea/
+.turbo/
