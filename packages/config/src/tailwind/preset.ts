@@ -1,39 +1,48 @@
-const fontboxTailwindPreset = {
+import type { Config } from "tailwindcss";
+import colors from "tailwindcss/colors";
+import defaultTheme from "tailwindcss/defaultTheme";
+
+export const fontboxPreset: Config = {
+  content: [],
   darkMode: ["class"],
   theme: {
     extend: {
       colors: {
         brand: {
-          DEFAULT: "#4338CA",
-          foreground: "#F9FAFB",
-          emphasis: "#312E81"
+          DEFAULT: "#1d4ed8",
+          foreground: "#f8fafc",
+          emphasis: "#1e40af",
+          subtle: "#dbeafe"
         },
-        neutral: {
-          50: "#F9FAFB",
-          100: "#F3F4F6",
-          200: "#E5E7EB",
-          300: "#D1D5DB",
-          400: "#9CA3AF",
-          500: "#6B7280",
-          600: "#4B5563",
-          700: "#374151",
-          800: "#1F2937",
-          900: "#111827"
-        }
-      },
-      borderRadius: {
-        lg: "1rem",
-        md: "0.75rem",
-        sm: "0.5rem"
+        surface: {
+          DEFAULT: "#ffffff",
+          muted: "#f5f5f5",
+          inverted: "#111827"
+        },
+        success: colors.emerald,
+        warning: colors.amber,
+        danger: colors.rose
       },
       fontFamily: {
-        display: ["'Inter Variable'", "system-ui", "sans-serif"],
-        body: ["'Inter Variable'", "system-ui", "sans-serif"]
+        sans: ["Inter", ...defaultTheme.fontFamily.sans],
+        mono: ["JetBrains Mono", ...defaultTheme.fontFamily.mono]
+      },
+      keyframes: {
+        "overlay-show": {
+          from: { opacity: "0" },
+          to: { opacity: "1" }
+        },
+        "content-show": {
+          from: { opacity: "0", transform: "translate(-50%, -48%) scale(0.96)" },
+          to: { opacity: "1", transform: "translate(-50%, -50%) scale(1)" }
+        }
+      },
+      animation: {
+        "overlay-show": "overlay-show 150ms ease",
+        "content-show": "content-show 150ms ease"
       }
     }
-  },
-  plugins: []
+  }
 };
 
-export default fontboxTailwindPreset;
-export { fontboxTailwindPreset };
+export default fontboxPreset;
